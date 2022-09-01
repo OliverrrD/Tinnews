@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 
 import com.laioffer.tinnews.R;
@@ -40,7 +41,10 @@ public class SearchFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        SearchNewsAdapter newsAdapter = new SearchNewsAdapter();
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(requireContext(), 2);
+        binding.newsResultsRecyclerView.setLayoutManager(gridLayoutManager);
+        binding.newsResultsRecyclerView.setAdapter(newsAdapter);
         NewsRepository repository = new NewsRepository();
         viewModel = new ViewModelProvider(this, new NewsViewModelFactory(repository)).get(SearchViewModel.class);
         viewModel
@@ -50,6 +54,7 @@ public class SearchFragment extends Fragment {
                         newsResponse -> {
                             if (newsResponse != null) {
                                 Log.d("SearchFragment", newsResponse.toString());
+                                newsAdapter.setArticles(newsResponse.articles);
                             }
                         });
 
